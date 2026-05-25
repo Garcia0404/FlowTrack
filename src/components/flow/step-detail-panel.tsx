@@ -158,7 +158,7 @@ function StepDetailContent({
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="Ej: Cliente no respondió..."
-            className="min-h-[80px] rounded-xl border-[#e5e5e5] resize-none placeholder:text-[#737373]"
+            className="min-h-20 rounded-xl border-[#e5e5e5] resize-none placeholder:text-[#737373]"
           />
           <Button
             onClick={saveComment}
@@ -178,7 +178,7 @@ function StepDetailContent({
         <Textarea
           value={observations}
           onChange={(e) => setObservations(e.target.value)}
-          className="mt-2 min-h-[72px] rounded-xl border-[#e5e5e5] placeholder:text-[#737373]"
+          className="mt-2 min-h-18 rounded-xl border-[#e5e5e5] placeholder:text-[#737373]"
           placeholder="Notas internas del paso..."
         />
       </div>

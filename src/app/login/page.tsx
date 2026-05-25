@@ -4,7 +4,7 @@ import { LoginForm } from "@/components/auth/login-form";
 
 export default function LoginPage() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#f5f5f7] px-4">
+    <div className="flex min-h-dvh flex-col items-center justify-center bg-[#f5f5f7] px-4">
       <div className="mb-10 flex flex-col items-center text-center">
         <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#272729] text-white">
           <Workflow className="h-7 w-7" />

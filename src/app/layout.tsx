@@ -30,7 +30,7 @@ export default function RootLayout({
       style={{ colorScheme: "light only" }}
       suppressHydrationWarning
     >
-      <body className="min-h-full bg-[#f5f5f7] font-sans text-foreground">
+      <body className="min-h-dvh bg-[#f5f5f7] font-sans text-foreground">
         <AppProviders>{children}</AppProviders>
       </body>
     </html>

@@ -104,7 +104,7 @@ export function FlowForm({
           <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="min-h-[88px] rounded-xl resize-none"
+            className="min-h-22 rounded-xl resize-none"
           />
         </div>
         <div className="space-y-2">

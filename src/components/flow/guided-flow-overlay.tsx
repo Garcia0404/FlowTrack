@@ -117,7 +117,7 @@ export function GuidedFlowOverlay() {
             </div>
 
             <Textarea
-              className="mt-4 min-h-[72px] rounded-xl"
+              className="mt-4 min-h-18 rounded-xl"
               placeholder="Comentario rápido..."
               value={comment}
               onChange={(e) => setComment(e.target.value)}
