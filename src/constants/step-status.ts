@@ -26,10 +26,10 @@ export const STEP_STATUS_STYLES: Record<
   { bg: string; border: string; text: string; dot: string }
 > = {
   pending: {
-    bg: "bg-[#fafafa]",
-    border: "border-[#e5e5e5]",
-    text: "text-[#737373]",
-    dot: "bg-[#d4d4d4]",
+    bg: "bg-foreground/30",
+    border: "border-foreground/40",
+    text: "text-foreground/80",
+    dot: "bg-foreground/60",
   },
   in_progress: {
     bg: "bg-primary/10",
