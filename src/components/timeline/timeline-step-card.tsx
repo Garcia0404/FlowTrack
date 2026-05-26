@@ -43,7 +43,7 @@ export function TimelineStepCard({
         onClick={onClick}
         whileTap={{ scale: 0.98 }}
         className={cn(
-          "flex-1 rounded-2xl border bg-white p-4 text-left shadow-sm transition-shadow hover:shadow-md",
+          "min-w-0 flex-1 rounded-2xl border bg-white p-4 text-left shadow-sm transition-shadow hover:shadow-md",
           styles.border,
           isActive && "ring-2 ring-[#0066cc]/35",
           step.status === "incomplete" &&
@@ -52,7 +52,7 @@ export function TimelineStepCard({
       >
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
+            <div className="flex min-w-0 items-center gap-2">
               <Icon
                 className={cn(
                   "h-4 w-4 shrink-0",
@@ -60,7 +60,7 @@ export function TimelineStepCard({
                   step.status === "in_progress" && "animate-spin"
                 )}
               />
-              <div className="truncate text-[15px] font-semibold tracking-[-0.01em] text-foreground">
+              <div className="min-w-0 flex-1 truncate text-[15px] font-semibold tracking-[-0.01em] text-foreground">
                 {step.title}
               </div>
             </div>
