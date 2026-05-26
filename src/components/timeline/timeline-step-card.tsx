@@ -65,7 +65,7 @@ export function TimelineStepCard({
               </div>
             </div>
             {step.description && (
-              <p className="mt-1 line-clamp-2 text-[13px] text-[#737373]">
+              <p className="mt-1 line-clamp-2 break-all text-[13px] text-[#737373]">
                 {step.description}
               </p>
             )}
@@ -76,7 +76,9 @@ export function TimelineStepCard({
         {lastComment && (
           <div className="mt-3 flex items-start gap-2 rounded-xl border border-[#e5e5e5] bg-[#fafafa] px-3 py-2">
             <MessageSquare className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#737373]" />
-            <p className="text-[13px] text-[#404040]">{lastComment.text}</p>
+            <p className="text-[13px] text-[#404040] line-clamp-1">
+              {lastComment.text}
+            </p>
           </div>
         )}
 

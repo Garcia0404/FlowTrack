@@ -95,7 +95,7 @@ function StepDetailContent({
       </div>
 
       {step.description && (
-        <p className="text-[15px] leading-relaxed text-[#737373]">
+        <p className="text-[15px] leading-relaxed text-[#737373] line-clamp-3 wrap-break-word">
           {step.description}
         </p>
       )}
@@ -269,7 +269,7 @@ export function StepDetailPanel() {
         className="w-full border-l border-[#e5e5e5] bg-white p-0 sm:max-w-md"
       >
         {step && selectedStepId && (
-          <div className="flex h-full flex-col">
+          <div className="flex h-full flex-col mt-4">
             <SheetHeader className="border-b border-[#e5e5e5] bg-[#fafafa] px-6 py-5">
               <div className="flex items-center justify-between gap-2">
                 <Button
@@ -281,7 +281,7 @@ export function StepDetailPanel() {
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <SheetTitle className="flex-1 text-center text-[17px] font-semibold tracking-[-0.02em]">
+                <SheetTitle className="flex-1 line-clamp-2 wrap-break-word text-center text-[17px] font-semibold tracking-[-0.02em]">
                   {step.title}
                 </SheetTitle>
                 <Button

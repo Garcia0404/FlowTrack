@@ -29,13 +29,13 @@ export function FlowCard({ flow, index }: { flow: Flow; index: number }) {
           <div className="mt-1 truncate text-[17px] font-semibold tracking-[-0.02em] text-foreground">
             {flow.title}
           </div>
-          <p className="mt-1 line-clamp-1 text-[14px] text-foreground/70">
+          <p className="mt-1 line-clamp-1 truncate text-sm text-foreground/70">
             {flow.description || "Sin descripción"}
           </p>
           <div className="mt-3 flex items-center gap-3">
             <Progress
               value={progress.percent}
-              className="h-1.5 max-w-[120px] flex-1 bg-foreground/10"
+              className="h-1.5 max-w-30 flex-1 bg-foreground/10"
             />
             <span className="text-xs font-medium text-foreground/70">
               {progress.completed}/{progress.total}

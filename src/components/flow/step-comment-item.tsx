@@ -29,11 +29,7 @@ export function StepCommentItem({
       transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
       className="group rounded-xl border border-[#e5e5e5] bg-white px-3 py-2"
     >
-      <motion.div
-        layout
-        className="relative"
-      >
-
+      <motion.div layout className="relative">
         <AnimatePresence>
           <div className="absolute top-0 right-0">
             {confirming ? (
@@ -42,7 +38,7 @@ export function StepCommentItem({
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="flex shrink-0 items-center gap-1.5"
+                className="flex shrink-0 items-center gap-1.5 bg-white rounded-md px-2 py-1 shadow-md"
               >
                 <button
                   type="button"
@@ -77,7 +73,9 @@ export function StepCommentItem({
           </div>
         </AnimatePresence>
         <motion.div layout className="min-w-0 flex-1">
-          <p className="text-[14px] text-foreground">{comment.text}</p>
+          <p className="text-sm text-foreground wrap-break-word me-4.5">
+            {comment.text}
+          </p>
           <p className="mt-1 text-[11px] text-[#737373]">
             {formatDateTime(comment.createdAt)}
           </p>
