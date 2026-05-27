@@ -66,7 +66,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <DropdownMenuContent align="end" className="rounded-xl border-[#e5e5e5]">
                 <DropdownMenuItem
                   onClick={() => void handleLogout()}
-                  className="text-[#c93400]"
+                  className="text-[#c93400] text-nowrap"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
                   Cerrar sesión

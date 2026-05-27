@@ -16,11 +16,11 @@ export function FlowProgressHeader({ flow }: { flow: Flow }) {
           <p className="text-xs font-medium text-foreground/70">
             {FLOW_STATUS_LABELS[flow.status]}
           </p>
-          <h1 className="mt-1 text-2xl break-all font-semibold tracking-[-0.03em] text-foreground sm:text-3xl">
+          <h1 className="mt-1 text-2xl wrap-break-word font-semibold tracking-[-0.03em] text-foreground sm:text-3xl">
             {flow.title}
           </h1>
           {flow.description && (
-            <p className="mt-1 max-w-xl break-all text-sm leading-relaxed text-foreground/70">
+            <p className="mt-1 max-w-xl wrap-break-word text-balance text-sm leading-relaxed text-foreground/70">
               {flow.description}
             </p>
           )}

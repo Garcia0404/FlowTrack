@@ -65,7 +65,7 @@ export function TimelineStepCard({
               </div>
             </div>
             {step.description && (
-              <p className="mt-1 line-clamp-2 break-all text-[13px] text-[#737373]">
+              <p className="mt-1 line-clamp-2 wrap-break-word text-[13px] text-[#737373]">
                 {step.description}
               </p>
             )}

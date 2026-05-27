@@ -1,13 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  AlertCircle,
-  Check,
-  ChevronLeft,
-  ChevronRight,
-  X,
-} from "lucide-react";
+import { AlertCircle, Check, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { StatusPill } from "@/components/ui/status-pill";
@@ -79,27 +73,29 @@ export function GuidedFlowOverlay() {
             className="w-full max-w-lg rounded-3xl border border-[#e5e5e5] bg-white p-6 shadow-xl"
           >
             <div className="flex items-start justify-between">
-              <div>
-                <p className="text-[13px] font-medium text-[#0066cc]">
-                  Paso {index + 1} de {steps.length}
-                </p>
-                <h2 className="mt-1 text-xl font-semibold tracking-[-0.02em]">
+              <div className="flex-1">
+                <div className="text-[13px] font-medium text-primary flex items-center gap-2 justify-between">
+                  <div className="">
+                    Paso {index + 1} de {steps.length}
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    onClick={() => void close()}
+                    className="rounded-full"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+                <h2 className="mt-1 text-xl font-semibold tracking-[-0.02em] break-all text-pretty">
                   {step.title}
                 </h2>
                 <StatusPill status={step.status} className="mt-2" />
               </div>
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                onClick={() => void close()}
-                className="rounded-full"
-              >
-                <X className="h-4 w-4" />
-              </Button>
             </div>
 
             {step.description && (
-              <p className="mt-4 text-[15px] leading-relaxed text-[#737373]">
+              <p className="mt-4 text-[15px] leading-relaxed text-[#737373] wrap-break-word text-balance">
                 {step.description}
               </p>
             )}
@@ -108,7 +104,7 @@ export function GuidedFlowOverlay() {
               {step.checklist.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center gap-2 text-[14px] text-[#404040]"
+                  className="flex items-center gap-2 text-[14px] text-foreground"
                 >
                   <span>{item.checked ? "✓" : "○"}</span>
                   {item.label}
@@ -135,7 +131,7 @@ export function GuidedFlowOverlay() {
               </Button>
               <Button
                 onClick={() => void handleComplete()}
-                className="rounded-full bg-[#34c759] hover:bg-[#2db84c] text-white"
+                className="rounded-full border-green-700 bg-green-200 hover:bg-green-300 text-foreground"
               >
                 <Check className="mr-1 h-4 w-4" />
                 Completo
@@ -143,14 +139,14 @@ export function GuidedFlowOverlay() {
               <Button
                 variant="outline"
                 onClick={() => void handleIncomplete()}
-                className="rounded-full border-[#ff9500]/40"
+                className="rounded-full border-yellow-600 bg-yellow-100 hover:bg-yellow-200"
               >
-                <AlertCircle className="mr-1 h-4 w-4 text-[#ff9500]" />
+                <AlertCircle className="mr-1 h-4 w-4 text-yellow-600" />
                 Incompleto
               </Button>
               <Button
                 onClick={() => void handleNext()}
-                className="rounded-full bg-[#0066cc] ml-auto"
+                className="rounded-full bg-primary ml-auto"
               >
                 Siguiente
                 <ChevronRight className="ml-1 h-4 w-4" />
