@@ -4,8 +4,8 @@ export type FlowStatus = "draft" | "active" | "completed" | "paused";
 
 export interface ChecklistItem {
   id: string;
-  label: string;
-  checked: boolean;
+  text: string;
+  completed: boolean;
 }
 
 export interface StepComment {

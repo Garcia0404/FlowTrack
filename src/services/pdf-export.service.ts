@@ -67,7 +67,7 @@ export class PdfExportService {
       }
       for (const item of step.checklist) {
         ensureSpace(20);
-        drawText(`${item.checked ? "✓" : "○"} ${item.label}`, 9);
+        drawText(`${item.completed ? "✓" : "○"} ${item.text}`, 9);
       }
       for (const c of step.comments) {
         ensureSpace(24);

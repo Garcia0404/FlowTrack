@@ -106,8 +106,8 @@ export function GuidedFlowOverlay() {
                   key={item.id}
                   className="flex items-center gap-2 text-[14px] text-foreground"
                 >
-                  <span>{item.checked ? "✓" : "○"}</span>
-                  {item.label}
+                  <span>{item.completed ? "✓" : "○"}</span>
+                  {item.text}
                 </div>
               ))}
             </div>

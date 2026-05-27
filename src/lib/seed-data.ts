@@ -48,8 +48,8 @@ export async function seedDemoFlowIfEmpty(): Promise<void> {
         status: "completed",
         order: 0,
         checklist: [
-          { id: createId("chk"), label: "Dirección origen", checked: true },
-          { id: createId("chk"), label: "Dirección destino", checked: true },
+          { id: createId("chk"), text: "Dirección origen", completed: true },
+          { id: createId("chk"), text: "Dirección destino", completed: true },
         ],
         comments: [
           {
@@ -65,8 +65,8 @@ export async function seedDemoFlowIfEmpty(): Promise<void> {
         status: "in_progress",
         order: 1,
         checklist: [
-          { id: createId("chk"), label: "Conductor asignado", checked: true },
-          { id: createId("chk"), label: "Vehículo verificado", checked: false },
+          { id: createId("chk"), text: "Conductor asignado", completed: true },
+          { id: createId("chk"), text: "Vehículo verificado", completed: false },
         ],
         observations: "Pendiente confirmar placa",
       }),
@@ -76,8 +76,8 @@ export async function seedDemoFlowIfEmpty(): Promise<void> {
         status: "pending",
         order: 2,
         checklist: [
-          { id: createId("chk"), label: "Firma digital", checked: false },
-          { id: createId("chk"), label: "Foto de entrega", checked: false },
+          { id: createId("chk"), text: "Firma digital", completed: false },
+          { id: createId("chk"), text: "Foto de entrega", completed: false },
         ],
         comments: [
           {

@@ -11,16 +11,15 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { StatusPill } from "@/components/ui/status-pill";
 import { StepCommentItem } from "@/components/flow/step-comment-item";
+import { ChecklistItemEditor } from "@/components/flow/checklist-item-editor";
 import { useFlowEdit } from "@/components/flow/flow-edit-context";
 import { useStepEditSession } from "@/hooks/use-step-edit-session";
 import { useFlowStore } from "@/stores/flow-store";
 import { useUiStore } from "@/stores/ui-store";
-import { createId } from "@/utils/id";
 import { formatDateTime } from "@/utils/date";
 import type { FlowStep } from "@/types/flow";
 
@@ -33,10 +32,10 @@ function StepDetailContent({
 }) {
   const flowEdit = useFlowEdit();
   const currentFlow = useFlowStore((s) => s.currentFlow);
-  const updateStep = useFlowStore((s) => s.updateStepLocal);
   const setStepStatus = useFlowStore((s) => s.setStepStatus);
   const addComment = useFlowStore((s) => s.addComment);
   const deleteComment = useFlowStore((s) => s.deleteComment);
+  const addChecklistItemToStep = useFlowStore((s) => s.addChecklistItem);
 
   const [comment, setComment] = useState("");
   const [observations, setObservations] = useState(step.observations);
@@ -55,20 +54,8 @@ function StepDetailContent({
     setComment("");
   }, [step.id, step.observations, step.updatedAt]);
 
-  const toggleChecklist = (itemId: string) => {
-    const checklist = step.checklist.map((c) =>
-      c.id === itemId ? { ...c, checked: !c.checked } : c
-    );
-    void updateStep(step.id, { checklist });
-  };
-
-  const addChecklistItem = () => {
-    void updateStep(step.id, {
-      checklist: [
-        ...step.checklist,
-        { id: createId("chk"), label: "Nueva tarea", checked: false },
-      ],
-    });
+  const addChecklistItem = async () => {
+    await addChecklistItemToStep(step.id);
   };
 
   const saveComment = () => {
@@ -106,24 +93,14 @@ function StepDetailContent({
         </h4>
         <div className="space-y-2">
           {step.checklist.map((item) => (
-            <label
+            <ChecklistItemEditor
               key={item.id}
-              className="flex items-center gap-3 rounded-xl border border-[#e5e5e5] bg-[#fafafa] px-3 py-2.5"
-            >
-              <Checkbox
-                checked={item.checked}
-                onCheckedChange={() => toggleChecklist(item.id)}
-              />
-              <span
-                className={
-                  item.checked
-                    ? "text-[14px] text-[#737373] line-through"
-                    : "text-[14px] text-foreground"
-                }
-              >
-                {item.label}
-              </span>
-            </label>
+              stepId={step.id}
+              itemId={item.id}
+              text={item.text}
+              completed={item.completed}
+              onDelete={() => {}}
+            />
           ))}
         </div>
         <Button

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { flowService } from "@/services/flow.service";
+import { createId } from "@/utils/id";
 import type {
   CreateFlowInput,
   Flow,
@@ -28,6 +29,10 @@ interface FlowState {
   stopGuided: () => Promise<void>;
   goToGuidedStep: (index: number) => Promise<void>;
   completeGuidedStep: (advance?: boolean) => Promise<void>;
+  reorderSteps: (stepIds: string[]) => Promise<void>;
+  updateChecklistItem: (stepId: string, itemId: string, text?: string, completed?: boolean) => Promise<void>;
+  deleteChecklistItem: (stepId: string, itemId: string) => Promise<void>;
+  addChecklistItem: (stepId: string, text?: string) => Promise<void>;
 }
 
 async function refreshCurrent(
@@ -168,5 +173,69 @@ export const useFlowStore = create<FlowState>((set, get) => ({
       await refreshCurrent(currentFlow.id, set);
     }
     await get().loadFlows();
+  },
+
+  reorderSteps: async (stepIds: string[]) => {
+    const { currentFlow } = get();
+    if (!currentFlow) return;
+    
+    const reorderedSteps = stepIds.map((id, index) => {
+      const step = currentFlow.steps.find((s) => s.id === id);
+      return step ? { ...step, order: index } : null;
+    }).filter((s): s is FlowStep => s !== null);
+    
+    await flowService.update(currentFlow.id, { steps: reorderedSteps });
+    await refreshCurrent(currentFlow.id, set);
+  },
+
+  updateChecklistItem: async (stepId: string, itemId: string, text?: string, completed?: boolean) => {
+    const { currentFlow } = get();
+    if (!currentFlow) return;
+    
+    const step = currentFlow.steps.find((s) => s.id === stepId);
+    if (!step) return;
+    
+    const checklist = step.checklist.map((item) => {
+      if (item.id === itemId) {
+        return {
+          ...item,
+          ...(text !== undefined && { text }),
+          ...(completed !== undefined && { completed }),
+        };
+      }
+      return item;
+    });
+    
+    await flowService.updateStep(currentFlow.id, stepId, { checklist });
+    await refreshCurrent(currentFlow.id, set);
+  },
+
+  deleteChecklistItem: async (stepId: string, itemId: string) => {
+    const { currentFlow } = get();
+    if (!currentFlow) return;
+    
+    const step = currentFlow.steps.find((s) => s.id === stepId);
+    if (!step) return;
+    
+    const checklist = step.checklist.filter((item) => item.id !== itemId);
+    
+    await flowService.updateStep(currentFlow.id, stepId, { checklist });
+    await refreshCurrent(currentFlow.id, set);
+  },
+
+  addChecklistItem: async (stepId: string, text = "") => {
+    const { currentFlow } = get();
+    if (!currentFlow) return;
+    
+    const step = currentFlow.steps.find((s) => s.id === stepId);
+    if (!step) return;
+    
+    const checklist = [
+      ...step.checklist,
+      { id: createId("chk"), text, completed: false },
+    ];
+    
+    await flowService.updateStep(currentFlow.id, stepId, { checklist });
+    await refreshCurrent(currentFlow.id, set);
   },
 }));

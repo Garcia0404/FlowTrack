@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { AlertCircle, MessageSquare } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import type { FlowStep } from "@/types/flow";
 import { STEP_STATUS_ICONS, STEP_STATUS_STYLES } from "@/constants/step-status";
 import { StatusPill } from "@/components/ui/status-pill";
@@ -84,7 +84,7 @@ export function TimelineStepCard({
 
         {step.checklist.length > 0 && (
           <p className="mt-2 text-[12px] font-medium text-[#737373]">
-            {step.checklist.filter((c) => c.checked).length}/
+            {step.checklist.filter((c) => c.completed).length}/
             {step.checklist.length} checklist
           </p>
         )}
