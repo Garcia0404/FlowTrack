@@ -73,7 +73,7 @@ export function GuidedFlowOverlay() {
             className="w-full max-w-lg rounded-3xl border border-[#e5e5e5] bg-white p-6 shadow-xl"
           >
             <div className="flex items-start justify-between">
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <div className="text-[13px] font-medium text-primary flex items-center gap-2 justify-between">
                   <div className="">
                     Paso {index + 1} de {steps.length}
@@ -82,12 +82,12 @@ export function GuidedFlowOverlay() {
                     variant="ghost"
                     size="icon-sm"
                     onClick={() => void close()}
-                    className="rounded-full"
+                    className="rounded-full translate-x-1"
                   >
                     <X className="h-4 w-4" />
                   </Button>
                 </div>
-                <h2 className="mt-1 text-xl font-semibold tracking-[-0.02em] break-all text-pretty">
+                <h2 className="mt-1 text-xl font-semibold tracking-[-0.02em] wrap-break-word text-balance">
                   {step.title}
                 </h2>
                 <StatusPill status={step.status} className="mt-2" />
@@ -95,7 +95,7 @@ export function GuidedFlowOverlay() {
             </div>
 
             {step.description && (
-              <p className="mt-4 text-[15px] leading-relaxed text-[#737373] wrap-break-word text-balance">
+              <p className="mt-4 text-[15px] leading-relaxed text-[#737373] wrap-break-word text-pretty">
                 {step.description}
               </p>
             )}

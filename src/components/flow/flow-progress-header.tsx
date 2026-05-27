@@ -12,15 +12,15 @@ export function FlowProgressHeader({ flow }: { flow: Flow }) {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
+        <div className="flex-1 min-w-0">
           <p className="text-xs font-medium text-foreground/70">
             {FLOW_STATUS_LABELS[flow.status]}
           </p>
-          <h1 className="mt-1 text-2xl wrap-break-word font-semibold tracking-[-0.03em] text-foreground sm:text-3xl">
+          <h1 className="mt-1 text-2xl wrap-break-word text-balance font-semibold tracking-[-0.03em] text-foreground sm:text-3xl">
             {flow.title}
           </h1>
           {flow.description && (
-            <p className="mt-1 max-w-xl wrap-break-word text-balance text-sm leading-relaxed text-foreground/70">
+            <p className="mt-1 max-w-xl wrap-break-word text-pretty text-sm leading-relaxed text-foreground/70">
               {flow.description}
             </p>
           )}
