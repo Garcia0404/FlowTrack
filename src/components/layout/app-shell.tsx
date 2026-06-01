@@ -18,6 +18,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const logout = useAuthStore((s) => s.logout);
   const session = useAuthStore((s) => s.session);
+  const isHydrated = useAuthStore((s) => s.isHydrated);
 
   const handleLogout = async () => {
     await logout();
@@ -61,14 +62,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   />
                 }
               >
-                {session?.user.name ?? "Usuario"}
+                {isHydrated ? session?.user.name : null}
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="rounded-xl border-[#e5e5e5]">
                 <DropdownMenuItem
                   onClick={() => void handleLogout()}
-                  className="text-[#c93400] text-nowrap"
+                  className="text-red-500 text-nowrap hover:text-red-800 transition-colors"
                 >
-                  <LogOut className="mr-2 h-4 w-4" />
+                  <LogOut className="h-4 w-4" />
                   Cerrar sesión
                 </DropdownMenuItem>
               </DropdownMenuContent>
