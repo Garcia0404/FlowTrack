@@ -6,7 +6,7 @@ import { FlowProgressHeader } from "@/components/flow/flow-progress-header";
 import { FlowActionsBar } from "@/components/flow/flow-actions-bar";
 import { FlowEditProvider } from "@/components/flow/flow-edit-context";
 import { VerticalTimeline } from "@/components/timeline/vertical-timeline";
-import { StepDetailPanel } from "@/components/flow/step-detail-panel";
+import { StepDetailPanel } from "@/components/flow/step-detail/step-detail-panel";
 import { GuidedFlowOverlay } from "@/components/flow/guided-flow-overlay";
 import { useFlowStore } from "@/stores/flow-store";
 import { useFlowAutosave } from "@/hooks/use-flow-autosave";
