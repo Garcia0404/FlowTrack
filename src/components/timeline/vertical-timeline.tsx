@@ -10,24 +10,41 @@ export function VerticalTimeline({ flow }: { flow: Flow }) {
   const selectedStepId = useUiStore((s) => s.selectedStepId);
   const steps = [...flow.steps].sort((a, b) => a.order - b.order);
 
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: {
+      opacity: 0,
+      y: 12,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+    },
+  };
   return (
     <motion.div
+      key={flow.id}
       initial="hidden"
       animate="visible"
-      variants={{
-        hidden: {},
-        visible: { transition: { staggerChildren: 0.05 } },
-      }}
+      variants={containerVariants}
       className="mt-8"
     >
       {steps.map((step, index) => (
         <motion.div
           key={step.id}
-          variants={{
-            hidden: { opacity: 0, y: 8 },
-            visible: { opacity: 1, y: 0 },
+          variants={itemVariants}
+          transition={{
+            duration: 0.35,
+            ease: "easeOut",
           }}
-          transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
         >
           <TimelineStepCard
             step={step}

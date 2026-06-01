@@ -1,7 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { AlertCircle, MessageSquare } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import type { FlowStep } from "@/types/flow";
 import { STEP_STATUS_ICONS, STEP_STATUS_STYLES } from "@/constants/step-status";
 import { StatusPill } from "@/components/ui/status-pill";
@@ -38,12 +37,11 @@ export function TimelineStepCard({
         )}
       </div>
 
-      <motion.button
+      <button
         type="button"
         onClick={onClick}
-        whileTap={{ scale: 0.98 }}
         className={cn(
-          "min-w-0 flex-1 rounded-2xl border bg-white p-4 text-left shadow-sm transition-shadow hover:shadow-md",
+          "min-w-0 flex-1 rounded-2xl border bg-white p-4 text-left shadow-sm transition-all hover:shadow-md active:scale-98 duration-300",
           styles.border,
           isActive && "ring-2 ring-[#0066cc]/35",
           step.status === "incomplete" &&
@@ -88,7 +86,7 @@ export function TimelineStepCard({
             {step.checklist.length} checklist
           </p>
         )}
-      </motion.button>
+      </button>
     </div>
   );
 }
