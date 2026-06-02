@@ -41,7 +41,7 @@ export function TimelineStepCard({
         type="button"
         onClick={onClick}
         className={cn(
-          "min-w-0 flex-1 rounded-2xl border bg-white p-4 text-left shadow-sm transition-all hover:shadow-md active:scale-98 duration-300",
+          "min-w-0 flex-1 rounded-2xl border bg-white p-4 text-left shadow-sm transition-transform hover:shadow-md active:scale-98 duration-300",
           styles.border,
           isActive && "ring-2 ring-[#0066cc]/35",
           step.status === "incomplete" &&
