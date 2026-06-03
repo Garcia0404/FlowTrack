@@ -103,7 +103,7 @@ export function TimelineStepCard({
             </div>
 
             {step.description && (
-              <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+              <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground wrap-break-word">
                 {step.description}
               </p>
             )}
@@ -118,8 +118,8 @@ export function TimelineStepCard({
           <div className="mt-4 flex items-start gap-2 rounded-2xl bg-muted px-3 py-2.5">
             <MessageSquare className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-foreground" />
 
-            <p className="line-clamp-2 text-[13px] text-muted-foreground">
-              {lastComment.text}
+            <p className="truncate text-[13px] text-muted-foreground">
+              {lastComment.text}|
             </p>
           </div>
         )}

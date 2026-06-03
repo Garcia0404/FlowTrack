@@ -29,12 +29,12 @@ export function FlowProgressHeader({
             }
           </span>
 
-          <h1 className="mt-4 text-[34px] font-semibold leading-[1.2] tracking-[-0.03em] text-foreground text-balance">
+          <h1 className="mt-4 text-[34px] wrap-break-word font-semibold leading-[1.2] tracking-[-0.03em] text-foreground text-balance">
             {flow.title}
           </h1>
 
           {flow.description && (
-            <p className="mt-3 max-w-2xl text-[17px] leading-[1.47] tracking-[-0.01em] text-muted-foreground text-pretty">
+            <p className="mt-3 max-w-2xl text-[17px] leading-[1.47] tracking-[-0.01em] text-muted-foreground text-pretty wrap-break-word">
               {flow.description}
             </p>
           )}
