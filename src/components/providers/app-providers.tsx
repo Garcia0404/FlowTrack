@@ -21,7 +21,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
         toastOptions={{
           classNames: {
             toast:
-              "rounded-2xl border border-[#e5e5e5] bg-white text-foreground shadow-sm",
+              "rounded-2xl border border-[#e5e5e5] bg-background text-foreground shadow-sm",
           },
         }}
       />

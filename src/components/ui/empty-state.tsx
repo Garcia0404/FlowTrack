@@ -22,7 +22,7 @@ export function EmptyState({
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
-      className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-[#d4d4d4] bg-white px-8 py-20 text-center"
+      className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-[#d4d4d4] bg-background px-8 py-20 text-center"
     >
       <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#f5f5f5]">
         <Icon className="h-6 w-6 text-[#737373]" />

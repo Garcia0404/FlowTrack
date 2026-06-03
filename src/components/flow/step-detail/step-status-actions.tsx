@@ -1,6 +1,7 @@
 "use client";
 
 import { Check } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 
 interface Props {
@@ -20,8 +21,16 @@ export function StepStatusActions({
       <Button
         variant="outline"
         size="sm"
-        className="rounded-full border-[#e5e5e5]"
-        onClick={() => void setStepStatus(stepId, "completed")}
+        className="
+          rounded-full
+          border-border
+        "
+        onClick={() =>
+          void setStepStatus(
+            stepId,
+            "completed"
+          )
+        }
       >
         <Check className="mr-1.5 h-4 w-4" />
         Marcar completo
@@ -30,8 +39,19 @@ export function StepStatusActions({
       <Button
         variant="outline"
         size="sm"
-        className="rounded-full border-[#ff9500]/40 text-[#c93400]"
-        onClick={() => void setStepStatus(stepId, "incomplete")}
+        className="
+          rounded-full
+          border-destructive/30
+          text-destructive
+          hover:bg-destructive/10
+          hover:text-destructive
+        "
+        onClick={() =>
+          void setStepStatus(
+            stepId,
+            "incomplete"
+          )
+        }
       >
         Marcar incompleto
       </Button>
@@ -39,8 +59,17 @@ export function StepStatusActions({
       <Button
         variant="ghost"
         size="sm"
-        className="rounded-full text-[#737373]"
-        onClick={() => void setStepStatus(stepId, "in_progress")}
+        className="
+          rounded-full
+          text-muted-foreground
+          hover:text-foreground
+        "
+        onClick={() =>
+          void setStepStatus(
+            stepId,
+            "in_progress"
+          )
+        }
       >
         En proceso
       </Button>

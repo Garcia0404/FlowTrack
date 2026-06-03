@@ -129,10 +129,20 @@ export const useFlowStore = create<FlowState>((set, get) => ({
 
   startGuided: async () => {
     const { currentFlow } = get();
+
     if (!currentFlow) return;
-    const flow = await flowService.startGuided(currentFlow.id);
-    set({ currentFlow: flow });
-    await get().loadFlows();
+
+    const flow =
+      await flowService.startGuided(
+        currentFlow.id
+      );
+
+    set((state) => ({
+      currentFlow: flow,
+      flows: state.flows.map((f) =>
+        f.id === flow.id ? flow : f
+      ),
+    }));
   },
 
   stopGuided: async () => {
@@ -154,19 +164,25 @@ export const useFlowStore = create<FlowState>((set, get) => ({
 
   completeGuidedStep: async (advance = true) => {
     const { currentFlow } = get();
+
     if (!currentFlow || currentFlow.guidedStepIndex === null) return;
 
     const step = currentFlow.steps[currentFlow.guidedStepIndex];
+
     if (step) {
-      await flowService.setStepStatus(currentFlow.id, step.id, "completed");
+      await flowService.setStepStatus(
+        currentFlow.id,
+        step.id,
+        "completed"
+      );
     }
 
     if (advance) {
       const flow = await flowService.advanceGuided(currentFlow.id);
+
       set({ currentFlow: flow });
     } else {
       await refreshCurrent(currentFlow.id, set);
     }
-    await get().loadFlows();
   },
 }));

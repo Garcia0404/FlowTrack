@@ -13,9 +13,6 @@ export const metadata: Metadata = {
   title: "FlowTrack — Workflows visuales",
   description:
     "Gestiona flujos de trabajo paso a paso con una experiencia premium y minimalista.",
-  other: {
-    "color-scheme": "light",
-  },
 };
 
 export default function RootLayout({
@@ -27,10 +24,9 @@ export default function RootLayout({
     <html
       lang="es"
       className={`${inter.variable} h-full`}
-      style={{ colorScheme: "light only" }}
       suppressHydrationWarning
     >
-      <body className="min-h-dvh bg-[#f5f5f7] font-sans text-foreground">
+      <body className="min-h-dvh font-sans">
         <AppProviders>{children}</AppProviders>
       </body>
     </html>

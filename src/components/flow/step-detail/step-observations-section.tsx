@@ -14,7 +14,13 @@ export function StepObservationsSection({
 }: StepObservationsSectionProps) {
   return (
     <div>
-      <Label className="text-[13px] font-medium text-[#404040]">
+      <Label
+        className="
+          text-[13px]
+          font-medium
+          text-foreground
+        "
+      >
         Observaciones
       </Label>
 
@@ -22,7 +28,16 @@ export function StepObservationsSection({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Notas internas del paso..."
-        className="mt-2 min-h-18 rounded-xl border-[#e5e5e5] placeholder:text-[#737373]"
+        className="
+          mt-2
+          min-h-20
+          rounded-xl
+          border-border
+          bg-background
+          text-foreground
+          placeholder:text-muted-foreground
+          resize-none
+        "
       />
     </div>
   );

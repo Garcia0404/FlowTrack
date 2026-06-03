@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { Separator } from "@/components/ui/separator";
 
 import { useFlowEdit } from "@/components/flow/flow-edit-context";
-import { useStepEditSession } from "@/hooks/use-step-edit-session";
 
 import { StepHeader } from "@/components/flow/step-detail/step-header";
 import { StepChecklistSection } from "@/components/flow/step-detail/step-checklist-section";
@@ -14,171 +14,144 @@ import { StepSaveActions } from "@/components/flow/step-detail/step-save-actions
 import { StepStatusActions } from "@/components/flow/step-detail/step-status-actions";
 import { StepFilesSection } from "@/components/flow/step-detail/step-files-section";
 
+import { useStepEditSession } from "@/hooks/use-step-edit-session";
+import { useStepChecklist } from "@/hooks/use-step-checklist";
+import { useStepComments } from "@/hooks/use-step-comments";
+
 import { useFlowStore } from "@/stores/flow-store";
-
-import { createId } from "@/utils/id";
-
-import type { FlowStep } from "@/types/flow";
 import { useUiStore } from "@/stores/ui-store";
 
+import type { FlowStep } from "@/types/flow";
+
 interface StepDetailContentProps {
-    step: FlowStep;
-    stepId: string;
+  step: FlowStep;
+  stepId: string;
 }
 
 export function StepDetailContent({
-    step,
-    stepId,
+  step,
+  stepId,
 }: StepDetailContentProps) {
-    const flowEdit = useFlowEdit();
+  const flowEdit = useFlowEdit();
 
-    const currentFlow = useFlowStore((s) => s.currentFlow);
-    const updateStep = useFlowStore((s) => s.updateStepLocal);
-    const setStepStatus = useFlowStore((s) => s.setStepStatus);
-    const addComment = useFlowStore((s) => s.addComment);
-    const deleteComment = useFlowStore((s) => s.deleteComment);
+  const currentFlow = useFlowStore((s) => s.currentFlow);
+  const updateStep = useFlowStore((s) => s.updateStepLocal);
+  const setStepStatus = useFlowStore((s) => s.setStepStatus);
+  const addComment = useFlowStore((s) => s.addComment);
+  const deleteComment = useFlowStore((s) => s.deleteComment);
 
-    const { closeStepPanel } = useUiStore();
+  const { closeStepPanel } = useUiStore();
 
-    const [comment, setComment] = useState("");
-    const [observations, setObservations] = useState(step.observations);
+  const [observations, setObservations] = useState(
+    step.observations
+  );
 
-    const { hasChanges, discardChanges, saveManually } =
-        useStepEditSession({
-            stepId,
-            flow: currentFlow,
-            localObservations: observations,
-            syncBaselineNow: flowEdit.syncBaselineNow,
-            markDiscarding: flowEdit.markDiscarding,
-            clearDiscarding: flowEdit.clearDiscarding,
-        });
+  const {
+    hasChanges,
+    discardChanges,
+    saveManually,
+  } = useStepEditSession({
+    stepId,
+    flow: currentFlow,
+    localObservations: observations,
+    syncBaselineNow: flowEdit.syncBaselineNow,
+    markDiscarding: flowEdit.markDiscarding,
+    clearDiscarding: flowEdit.clearDiscarding,
+  });
 
-    useEffect(() => {
-        setObservations(step.observations);
-        setComment("");
-    }, [step.id, step.observations, step.updatedAt]);
+  const {
+    comment,
+    setComment,
+    saveComment,
+  } = useStepComments({
+    stepId: step.id,
+    addComment,
+  });
 
-    const updateChecklist = (
-        checklist: typeof step.checklist
-    ) => {
-        void updateStep(step.id, { checklist });
-    };
+  const {
+    toggleChecklist,
+    updateChecklistItem,
+    deleteChecklistItem,
+    addChecklistItem,
+  } = useStepChecklist({
+    step,
+    updateStep,
+  });
 
-    const toggleChecklist = (itemId: string) => {
-        updateChecklist(
-            step.checklist.map((item) =>
-                item.id === itemId
-                    ? { ...item, checked: !item.checked }
-                    : item
-            )
-        );
-    };
+  useEffect(() => {
+    setObservations(step.observations);
+    setComment("");
+  }, [
+    step.id,
+    step.observations,
+    step.updatedAt,
+    setComment,
+  ]);
 
-    const updateChecklistItem = (
-        itemId: string,
-        label: string
-    ) => {
-        updateChecklist(
-            step.checklist.map((item) =>
-                item.id === itemId
-                    ? { ...item, label }
-                    : item
-            )
-        );
-    };
+  const handleSave = () => {
+    void saveManually({
+      stepId: step.id,
+      observations,
+    });
+  };
 
-    const deleteChecklistItem = (itemId: string) => {
-        updateChecklist(
-            step.checklist.filter(
-                (item) => item.id !== itemId
-            )
-        );
-    };
+  const handleDiscard = () => {
+    void discardChanges();
+    closeStepPanel();
+  };
 
-    const addChecklistItem = () => {
-        updateChecklist([
-            ...step.checklist,
-            {
-                id: createId("chk"),
-                label: "",
-                checked: false,
-            },
-        ]);
-    };
+  return (
+    <div className="space-y-6 pb-8">
+      <StepHeader
+        status={step.status}
+        updatedAt={step.updatedAt}
+      />
 
-    const saveComment = () => {
-        const text = comment.trim();
+      {step.description && (
+        <p className="text-sm leading-relaxed text-[#737373] line-clamp-3 wrap-break-word text-pretty">
+          {step.description}
+        </p>
+      )}
 
-        if (!text) return;
+      <StepChecklistSection
+        checklist={step.checklist}
+        onToggle={toggleChecklist}
+        onUpdate={updateChecklistItem}
+        onDelete={deleteChecklistItem}
+        onAdd={addChecklistItem}
+      />
 
-        void addComment(step.id, text);
-        setComment("");
-    };
+      <Separator />
 
-    const handleSave = () => {
-        void saveManually({
-            stepId: step.id,
-            observations,
-        });
-    };
+      <StepCommentsSection
+        comments={step.comments}
+        value={comment}
+        onChange={setComment}
+        onSave={saveComment}
+        onDelete={(commentId) =>
+          void deleteComment(step.id, commentId)
+        }
+      />
 
-    const handleDiscard = () => {
-        void discardChanges();
-        closeStepPanel();
-    };
+      <StepObservationsSection
+        value={observations}
+        onChange={setObservations}
+      />
 
-    return (
-        <div className="space-y-6 pb-8">
-            <StepHeader
-                status={step.status}
-                updatedAt={step.updatedAt}
-            />
+      <StepFilesSection files={step.files} />
 
-            {step.description && (
-                <p className="text-[15px] leading-relaxed text-[#737373] line-clamp-3 wrap-break-word">
-                    {step.description}
-                </p>
-            )}
+      <Separator />
 
-            <StepChecklistSection
-                checklist={step.checklist}
-                onToggle={toggleChecklist}
-                onUpdate={updateChecklistItem}
-                onDelete={deleteChecklistItem}
-                onAdd={addChecklistItem}
-            />
+      <StepSaveActions
+        hasChanges={hasChanges}
+        onSave={handleSave}
+        onDiscard={handleDiscard}
+      />
 
-            <Separator />
-
-            <StepCommentsSection
-                comments={step.comments}
-                value={comment}
-                onChange={setComment}
-                onSave={saveComment}
-                onDelete={(commentId) =>
-                    void deleteComment(step.id, commentId)
-                }
-            />
-
-            <StepObservationsSection
-                value={observations}
-                onChange={setObservations}
-            />
-
-            <StepFilesSection files={step.files} />
-
-            <Separator />
-
-            <StepSaveActions
-                hasChanges={hasChanges}
-                onSave={handleSave}
-                onDiscard={handleDiscard}
-            />
-
-            <StepStatusActions
-                stepId={step.id}
-                setStepStatus={setStepStatus}
-            />
-        </div>
-    );
+      <StepStatusActions
+        stepId={step.id}
+        setStepStatus={setStepStatus}
+      />
+    </div>
+  );
 }

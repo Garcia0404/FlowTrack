@@ -1,16 +1,26 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { AlertCircle, Check, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useState } from "react";
+import {
+  AlertCircle,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  X,
+} from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { StatusPill } from "@/components/ui/status-pill";
+
 import { useFlowStore } from "@/stores/flow-store";
 import { useUiStore } from "@/stores/ui-store";
-import { useState } from "react";
 
 export function GuidedFlowOverlay() {
-  const currentFlow = useFlowStore((s) => s.currentFlow);
+  const currentFlow = useFlowStore(
+    (s) => s.currentFlow
+  );
+
   const {
     completeGuidedStep,
     setStepStatus,
@@ -18,17 +28,30 @@ export function GuidedFlowOverlay() {
     goToGuidedStep,
     stopGuided,
   } = useFlowStore();
-  const { isGuidedOverlayOpen, setGuidedOverlayOpen } = useUiStore();
-  const [comment, setComment] = useState("");
 
-  if (!currentFlow?.isGuidedActive || currentFlow.guidedStepIndex === null) {
-    return null;
-  }
+  const {
+    isGuidedOverlayOpen,
+    setGuidedOverlayOpen,
+  } = useUiStore();
 
-  const steps = [...currentFlow.steps].sort((a, b) => a.order - b.order);
-  const index = currentFlow.guidedStepIndex;
-  const step = steps[index];
-  if (!step) return null;
+  const [comment, setComment] =
+    useState("");
+
+  const steps = [
+    ...(currentFlow?.steps ?? []),
+  ].sort((a, b) => a.order - b.order);
+
+  const index = currentFlow?.guidedStepIndex;
+
+  const step =
+    index === null || index === undefined
+      ? null
+      : steps[index];
+
+  const open =
+    isGuidedOverlayOpen &&
+    !!currentFlow?.isGuidedActive &&
+    !!step;
 
   const close = async () => {
     await stopGuided();
@@ -40,121 +63,203 @@ export function GuidedFlowOverlay() {
     setComment("");
   };
 
-  const handleIncomplete = async () => {
-    await setStepStatus(step.id, "incomplete");
-    if (comment.trim()) await addComment(step.id, comment.trim());
-    await completeGuidedStep(true);
-    setComment("");
-  };
+  const handleIncomplete =
+    async () => {
+      if (!step) return;
 
-  const handleComplete = async () => {
-    await setStepStatus(step.id, "completed");
-    if (comment.trim()) await addComment(step.id, comment.trim());
-    await completeGuidedStep(true);
-    setComment("");
-  };
+      await setStepStatus(
+        step.id,
+        "incomplete"
+      );
 
-  const open = isGuidedOverlayOpen && currentFlow.isGuidedActive;
+      if (comment.trim()) {
+        await addComment(
+          step.id,
+          comment.trim()
+        );
+      }
+
+      await completeGuidedStep(true);
+
+      setComment("");
+    };
+
+  const handleComplete =
+    async () => {
+      if (!step) return;
+
+      await setStepStatus(
+        step.id,
+        "completed"
+      );
+
+      if (comment.trim()) {
+        await addComment(
+          step.id,
+          comment.trim()
+        );
+      }
+
+      await completeGuidedStep(true);
+
+      setComment("");
+    };
+
+  if (!currentFlow || !step) {
+    return null;
+  }
 
   return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 backdrop-blur-sm sm:items-center"
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 24, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 16, scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 380, damping: 36 }}
-            className="w-full max-w-lg rounded-3xl border border-[#e5e5e5] bg-white p-6 shadow-xl"
-          >
-            <div className="flex items-start justify-between">
-              <div className="flex-1 min-w-0">
-                <div className="text-[13px] font-medium text-primary flex items-center gap-2 justify-between">
-                  <div className="">
-                    Paso {index + 1} de {steps.length}
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon-sm"
-                    onClick={() => void close()}
-                    className="rounded-full translate-x-1"
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-                <h2 className="mt-1 text-xl font-semibold tracking-[-0.02em] wrap-break-word text-balance">
-                  {step.title}
-                </h2>
-                <StatusPill status={step.status} className="mt-2" />
-              </div>
-            </div>
+    <div
+      className={`
+        fixed inset-0 z-50
+        flex items-end justify-center
+        p-4 sm:items-center
+        transition-all duration-500
+        ease-[cubic-bezier(0.22,1,0.36,1)]
+        ${open
+          ? "opacity-100 bg-black/40 backdrop-blur-sm"
+          : "pointer-events-none opacity-0 bg-black/0"
+        }
+      `}
+    >
+      <div
+        className={`
+          w-full max-w-lg
+          rounded-3xl
+          border border-border
+          bg-card
+          p-6
+          shadow-xl
+          transition-all duration-500
+          ease-[cubic-bezier(0.22,1,0.36,1)]
+          ${open
+            ? "translate-y-0 scale-100 opacity-100"
+            : "translate-y-8 scale-[0.96] opacity-0"
+          }
+        `}
+      >
+        <div className="flex items-start justify-between">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center justify-between gap-2 text-sm font-medium text-primary">
+              {typeof index === "number" && (
+                <span>
+                  Paso {index + 1} de {steps.length}
+                </span>
+              )}
 
-            {step.description && (
-              <p className="mt-4 text-[15px] leading-relaxed text-[#737373] wrap-break-word text-pretty">
-                {step.description}
-              </p>
-            )}
-
-            <div className="mt-4 space-y-2">
-              {step.checklist.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex items-center gap-2 text-[14px] text-foreground"
-                >
-                  <span>{item.checked ? "✓" : "○"}</span>
-                  {item.label}
-                </div>
-              ))}
-            </div>
-
-            <Textarea
-              className="mt-4 min-h-18 rounded-xl"
-              placeholder="Comentario rápido..."
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-            />
-
-            <div className="mt-6 flex flex-wrap gap-2">
               <Button
-                variant="outline"
-                disabled={index <= 0}
-                onClick={() => void goToGuidedStep(index - 1)}
+                variant="ghost"
+                size="icon-sm"
+                onClick={() =>
+                  void close()
+                }
                 className="rounded-full"
               >
-                <ChevronLeft className="mr-1 h-4 w-4" />
-                Anterior
-              </Button>
-              <Button
-                onClick={() => void handleComplete()}
-                className="rounded-full border-green-700 bg-green-200 hover:bg-green-300 text-foreground"
-              >
-                <Check className="mr-1 h-4 w-4" />
-                Completo
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => void handleIncomplete()}
-                className="rounded-full border-yellow-600 bg-yellow-100 hover:bg-yellow-200"
-              >
-                <AlertCircle className="mr-1 h-4 w-4 text-yellow-600" />
-                Incompleto
-              </Button>
-              <Button
-                onClick={() => void handleNext()}
-                className="rounded-full bg-primary ml-auto"
-              >
-                Siguiente
-                <ChevronRight className="ml-1 h-4 w-4" />
+                <X className="h-4 w-4" />
               </Button>
             </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground wrap-break-word text-balance">
+              {step.title}
+            </h2>
+
+            <StatusPill
+              status={step.status}
+              className="mt-3"
+            />
+          </div>
+        </div>
+
+        {step.description && (
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground wrap-break-word text-pretty">
+            {step.description}
+          </p>
+        )}
+
+        {step.checklist.length > 0 && (
+          <div className="mt-5 space-y-2">
+            {step.checklist.map(
+              (item) => (
+                <div
+                  key={item.id}
+                  className="flex items-center gap-2 text-sm text-foreground"
+                >
+                  <span>
+                    {item.checked
+                      ? "✓"
+                      : "○"}
+                  </span>
+
+                  <span>
+                    {item.label}
+                  </span>
+                </div>
+              )
+            )}
+          </div>
+        )}
+
+        <Textarea
+          value={comment}
+          onChange={(e) =>
+            setComment(
+              e.target.value
+            )
+          }
+          placeholder="Comentario rápido..."
+          className="mt-5 px-4 min-h-20 rounded-xl"
+        />
+
+        <div className="mt-6 flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            disabled={
+              typeof index !== "number" ||
+              index <= 0
+            }
+            onClick={() =>
+              typeof index === "number" &&
+              void goToGuidedStep(index - 1)
+            }
+            className="rounded-full"
+          >
+            <ChevronLeft className="mr-1 h-4 w-4" />
+            Anterior
+          </Button>
+
+          <Button
+            onClick={() =>
+              void handleComplete()
+            }
+            className="rounded-full"
+          >
+            <Check className="mr-1 h-4 w-4" />
+            Completo
+          </Button>
+
+          <Button
+            variant="outline"
+            onClick={() =>
+              void handleIncomplete()
+            }
+            className="rounded-full"
+          >
+            <AlertCircle className="mr-1 h-4 w-4" />
+            Incompleto
+          </Button>
+
+          <Button
+            onClick={() =>
+              void handleNext()
+            }
+            className="ml-auto rounded-full"
+          >
+            Siguiente
+            <ChevronRight className="ml-1 h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -1,10 +1,14 @@
 "use client";
 
 import { AnimatePresence } from "framer-motion";
+
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+
 import { StepCommentItem } from "@/components/flow/step-detail/step-comment-item";
+
 import type { StepComment } from "@/types/flow";
+import { StepSectionTitle } from "./step-section-title";
 
 interface StepCommentsSectionProps {
   comments: StepComment[];
@@ -23,9 +27,7 @@ export function StepCommentsSection({
 }: StepCommentsSectionProps) {
   return (
     <div>
-      <h4 className="mb-3 text-[13px] font-semibold uppercase tracking-wide text-[#404040]">
-        Comentarios
-      </h4>
+      <StepSectionTitle>Comentarios</StepSectionTitle>
 
       <div className="flex flex-col gap-2">
         <AnimatePresence initial={false}>
@@ -33,25 +35,39 @@ export function StepCommentsSection({
             <StepCommentItem
               key={comment.id}
               comment={comment}
-              onDelete={() => onDelete(comment.id)}
+              onDelete={() =>
+                onDelete(comment.id)
+              }
             />
           ))}
         </AnimatePresence>
       </div>
 
-      <div className="mt-3 space-y-2">
+      <div className="mt-3 space-y-3">
         <Textarea
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) =>
+            onChange(e.target.value)
+          }
           placeholder="Ej: Cliente no respondió..."
-          className="min-h-20 resize-none rounded-xl border-[#e5e5e5] placeholder:text-[#737373]"
+          className="
+            min-h-20
+            resize-none
+            rounded-2xl
+            border-border
+            bg-background
+            placeholder:text-muted-foreground
+          "
         />
 
         <Button
           size="sm"
           onClick={onSave}
           disabled={!value.trim()}
-          className="rounded-full bg-[#0066cc]"
+          className="
+            rounded-full
+            px-4
+          "
         >
           Guardar comentario
         </Button>

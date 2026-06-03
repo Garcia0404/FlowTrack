@@ -2,72 +2,105 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
 import { useAuthStore } from "@/stores/auth-store";
 import { LOCAL_CREDENTIALS } from "@/constants/auth";
 
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+
   const login = useAuthStore((s) => s.login);
   const isLoading = useAuthStore((s) => s.isLoading);
   const error = useAuthStore((s) => s.error);
 
-  const [email, setEmail] = useState<string>(LOCAL_CREDENTIALS.email);
+  const [email, setEmail] = useState(
+    LOCAL_CREDENTIALS.email as string
+  );
+
   const [password, setPassword] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (
+    e: React.FormEvent
+  ) => {
     e.preventDefault();
-    const ok = await login({ email, password });
+
+    const ok = await login({
+      email,
+      password,
+    });
+
     if (ok) {
-      const from = searchParams.get("from") || "/";
+      const from =
+        searchParams.get("from") || "/";
+
       router.replace(from);
       router.refresh();
     }
   };
 
   return (
-    <motion.form
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
+    <form
       onSubmit={(e) => void handleSubmit(e)}
-      className="w-full max-w-sm space-y-5"
+      className="w-full max-w-sm space-y-6"
     >
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label
+          htmlFor="email"
+          className="text-sm font-medium text-foreground"
+        >
+          Email
+        </Label>
+
         <Input
           id="email"
           type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="h-11 rounded-xl border-[#e5e5e5] bg-white placeholder:text-[#737373]"
           autoComplete="email"
+          value={email}
+          onChange={(e) =>
+            setEmail(e.target.value)
+          }
+          placeholder="Ingresa tu email"
+          className="h-11 rounded-full border-border bg-background px-4"
         />
       </div>
+
       <div className="space-y-2">
-        <Label htmlFor="password">Contraseña</Label>
+        <Label
+          htmlFor="password"
+          className="text-sm font-medium text-foreground"
+        >
+          Contraseña
+        </Label>
+
         <Input
           id="password"
           type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="flowtrack2024"
-          className="h-11 rounded-xl border-[#e5e5e5] bg-white placeholder:text-[#737373]"
           autoComplete="current-password"
+          value={password}
+          onChange={(e) =>
+            setPassword(e.target.value)
+          }
+          placeholder="Ingresa tu contraseña"
+          className="h-11 rounded-full border-border bg-background px-4"
         />
       </div>
+
       {error && (
-        <p className="text-[13px] text-[#c93400]">{error}</p>
+        <p className="text-sm text-destructive">
+          {error}
+        </p>
       )}
+
       <Button
         type="submit"
         disabled={isLoading}
-        className="h-11 w-full rounded-full bg-[#0066cc] hover:bg-[#0055b3] active:scale-[0.98]"
+        className="h-11 w-full rounded-full"
       >
         {isLoading ? (
           <Loader2 className="h-4 w-4 animate-spin" />
@@ -75,9 +108,10 @@ export function LoginForm() {
           "Iniciar sesión"
         )}
       </Button>
-      <p className="text-center text-[12px] text-[#737373]">
+
+      <p className="text-center text-xs text-muted-foreground">
         Demo: {LOCAL_CREDENTIALS.email} / {LOCAL_CREDENTIALS.password}
       </p>
-    </motion.form>
+    </form>
   );
 }

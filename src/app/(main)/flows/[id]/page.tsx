@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import { FlowProgressHeader } from "@/components/flow/flow-progress-header";
@@ -8,7 +8,6 @@ import { FlowActionsBar } from "@/components/flow/flow-actions-bar";
 import { FlowEditProvider } from "@/components/flow/flow-edit-context";
 import { GuidedFlowOverlay } from "@/components/flow/guided-flow-overlay";
 import { StepDetailPanel } from "@/components/flow/step-detail/step-detail-panel";
-
 import { VerticalTimeline } from "@/components/timeline/vertical-timeline";
 
 import { useFlowStore } from "@/stores/flow-store";
@@ -20,49 +19,33 @@ export default function FlowDetailPage() {
 
   const id = params.id as string;
 
-  const { currentFlow, loadFlow, isLoading } = useFlowStore();
-
-  const [initialized, setInitialized] = useState(false);
+  const {
+    currentFlow,
+    loadFlow,
+    isLoading,
+  } = useFlowStore();
 
   useEffect(() => {
     if (!id) return;
 
-    void loadFlow(id).finally(() => {
-      setInitialized(true);
-    });
+    void loadFlow(id);
   }, [id, loadFlow]);
 
-  const editSession = useFlowAutosave(currentFlow, id);
+  const editSession = useFlowAutosave(
+    currentFlow,
+    id
+  );
 
-  if (!initialized || isLoading) {
-    return (
-      <div className="h-64 animate-pulse rounded-3xl border border-[#e5e5e5] bg-white" />
-    );
-  }
-
-  if (!currentFlow) {
-    return (
-      <p className="text-foreground/70">
-        Flujo no encontrado.{" "}
-        <button
-          type="button"
-          onClick={() => router.push("/")}
-          className="font-medium text-primary"
-        >
-          Volver
-        </button>
-      </p>
-    );
+  if (isLoading || !currentFlow) {
+    return null;
   }
 
   return (
     <FlowEditProvider value={editSession}>
-      <div>
-        <div className="animate-in fade-in duration-300">
-          <FlowProgressHeader flow={currentFlow} />
-        </div>
+      <div className="animate-in fade-in duration-500">
+        <FlowProgressHeader flow={currentFlow} />
 
-        <div className="mt-6 animate-in fade-in duration-600">
+        <div className="mt-6">
           <FlowActionsBar flow={currentFlow} />
         </div>
 

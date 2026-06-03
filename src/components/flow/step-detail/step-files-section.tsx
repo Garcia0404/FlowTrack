@@ -1,6 +1,7 @@
 "use client";
 
 import type { FlowStep } from "@/types/flow";
+import { StepSectionTitle } from "./step-section-title";
 
 interface StepFilesSectionProps {
   files: FlowStep["files"];
@@ -15,18 +16,33 @@ export function StepFilesSection({
 
   return (
     <div>
-      <h4 className="mb-2 text-[13px] font-semibold text-[#737373]">
-        Archivos (simulados)
-      </h4>
+      <StepSectionTitle>Archivos</StepSectionTitle>
 
-      {files.map((file) => (
-        <p
-          key={file.id}
-          className="text-[13px] text-[#404040]"
-        >
-          {file.name}
-        </p>
-      ))}
+      <div className="space-y-2">
+        {files.map((file) => (
+          <div
+            key={file.id}
+            className="
+              rounded-xl
+              border
+              border-border
+              bg-card
+              px-3
+              py-2
+            "
+          >
+            <p
+              className="
+                text-sm
+                text-foreground
+                break-all
+              "
+            >
+              {file.name}
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

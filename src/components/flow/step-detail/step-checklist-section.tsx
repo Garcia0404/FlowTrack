@@ -1,8 +1,8 @@
 "use client";
 
-import { AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChecklistItemRow } from "@/components/flow/step-detail/checklist-item-row";
+import { StepSectionTitle } from "@/components/flow/step-detail/step-section-title";
 import type { ChecklistItem } from "@/types/flow";
 
 interface Props {
@@ -22,12 +22,12 @@ export function StepChecklistSection({
 }: Props) {
   return (
     <div>
-      <h4 className="mb-3 text-[13px] font-semibold uppercase tracking-wide text-[#404040]">
+      <StepSectionTitle>
         Checklist
-      </h4>
+      </StepSectionTitle>
 
-      <div className="space-y-2">
-        <AnimatePresence mode="popLayout">
+      {checklist.length > 0 ? (
+        <div className="space-y-2">
           {checklist.map((item) => (
             <ChecklistItemRow
               key={item.id}
@@ -35,17 +35,20 @@ export function StepChecklistSection({
               onToggle={onToggle}
               onUpdate={onUpdate}
               onDelete={onDelete}
-              isNew={item.label === ""}
             />
           ))}
-        </AnimatePresence>
-      </div>
+        </div>
+      ) : (
+        <p className="text-sm text-muted-foreground">
+          No hay ítems todavía.
+        </p>
+      )}
 
       <Button
         variant="ghost"
         size="sm"
         onClick={onAdd}
-        className="mt-2 rounded-full text-[#0066cc]"
+        className="mt-2 rounded-full text-primary"
       >
         + Añadir ítem
       </Button>

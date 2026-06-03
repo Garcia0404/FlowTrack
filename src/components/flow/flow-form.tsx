@@ -2,11 +2,17 @@
 
 import { useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import type { Flow, FlowStep } from "@/types/flow";
+
+import type {
+  Flow,
+  FlowStep,
+} from "@/types/flow";
+
 import { createId } from "@/utils/id";
 import { nowIso } from "@/utils/date";
 
@@ -17,8 +23,11 @@ export interface FlowFormValues {
   steps: FlowStep[];
 }
 
-function emptyStep(order: number): FlowStep {
+function emptyStep(
+  order: number
+): FlowStep {
   const ts = nowIso();
+
   return {
     id: createId("step"),
     title: "",
@@ -40,46 +49,106 @@ export function FlowForm({
   submitLabel,
 }: {
   initial?: Flow;
-  onSubmit: (values: FlowFormValues) => Promise<void>;
+  onSubmit: (
+    values: FlowFormValues
+  ) => Promise<void>;
   submitLabel: string;
 }) {
-  const [title, setTitle] = useState(initial?.title ?? "");
-  const [description, setDescription] = useState(initial?.description ?? "");
-  const [date, setDate] = useState(
-    initial?.date?.slice(0, 10) ?? new Date().toISOString().slice(0, 10)
-  );
-  const [steps, setSteps] = useState<FlowStep[]>(
-    initial?.steps?.length
-      ? [...initial.steps].sort((a, b) => a.order - b.order)
-      : [emptyStep(0)]
-  );
-  const [saving, setSaving] = useState(false);
+  const [title, setTitle] =
+    useState(
+      initial?.title ?? ""
+    );
 
-  const updateStep = (id: string, patch: Partial<FlowStep>) => {
+  const [
+    description,
+    setDescription,
+  ] = useState(
+    initial?.description ?? ""
+  );
+
+  const [date, setDate] =
+    useState(
+      initial?.date?.slice(
+        0,
+        10
+      ) ??
+        new Date()
+          .toISOString()
+          .slice(0, 10)
+    );
+
+  const [steps, setSteps] =
+    useState<FlowStep[]>(
+      initial?.steps?.length
+        ? [...initial.steps].sort(
+            (a, b) =>
+              a.order - b.order
+          )
+        : [emptyStep(0)]
+    );
+
+  const [saving, setSaving] =
+    useState(false);
+
+  const updateStep = (
+    id: string,
+    patch: Partial<FlowStep>
+  ) => {
     setSteps((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, ...patch } : s))
+      prev.map((step) =>
+        step.id === id
+          ? {
+              ...step,
+              ...patch,
+            }
+          : step
+      )
     );
   };
 
   const addStep = () => {
-    setSteps((prev) => [...prev, emptyStep(prev.length)]);
+    setSteps((prev) => [
+      ...prev,
+      emptyStep(prev.length),
+    ]);
   };
 
-  const removeStep = (id: string) => {
+  const removeStep = (
+    id: string
+  ) => {
     setSteps((prev) =>
-      prev.filter((s) => s.id !== id).map((s, i) => ({ ...s, order: i }))
+      prev
+        .filter(
+          (step) =>
+            step.id !== id
+        )
+        .map((step, index) => ({
+          ...step,
+          order: index,
+        }))
     );
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (
+    e: React.FormEvent
+  ) => {
     e.preventDefault();
+
     setSaving(true);
+
     try {
       await onSubmit({
         title,
         description,
-        date: new Date(date).toISOString(),
-        steps: steps.map((s, i) => ({ ...s, order: i })),
+        date: new Date(
+          date
+        ).toISOString(),
+        steps: steps.map(
+          (step, index) => ({
+            ...step,
+            order: index,
+          })
+        ),
       });
     } finally {
       setSaving(false);
@@ -87,98 +156,225 @@ export function FlowForm({
   };
 
   return (
-    <form onSubmit={(e) => void handleSubmit(e)} className="space-y-8">
-      <div className="space-y-4 rounded-2xl border border-[#e5e5e5] bg-white p-6 shadow-sm">
+    <form
+      onSubmit={(e) =>
+        void handleSubmit(e)
+      }
+      className="space-y-8"
+    >
+      <div
+        className="
+          space-y-5
+          rounded-3xl
+          border
+          border-border
+          bg-card
+          p-6
+        "
+      >
         <div className="space-y-2">
-          <Label>Título del flujo</Label>
+          <Label>
+            Título del flujo
+          </Label>
+
           <Input
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) =>
+              setTitle(
+                e.target.value
+              )
+            }
             placeholder="Servicio de Transporte"
             required
-            className="rounded-xl"
+            className="h-11 rounded-xl"
           />
         </div>
+
         <div className="space-y-2">
-          <Label>Descripción</Label>
+          <Label>
+            Descripción
+          </Label>
+
           <Textarea
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="min-h-22 rounded-xl resize-none"
+            onChange={(e) =>
+              setDescription(
+                e.target.value
+              )
+            }
+            className="
+              min-h-24
+              resize-none
+              rounded-xl
+            "
           />
         </div>
+
         <div className="space-y-2">
           <Label>Fecha</Label>
+
           <Input
             type="date"
             value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="rounded-xl"
+            onChange={(e) =>
+              setDate(
+                e.target.value
+              )
+            }
+            className="
+              h-11
+              rounded-xl
+            "
           />
         </div>
       </div>
 
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold tracking-[-0.02em]">Pasos</h2>
+        <div
+          className="
+            flex
+            items-center
+            justify-between
+          "
+        >
+          <h2
+            className="
+              text-lg
+              font-semibold
+              tracking-tight
+              text-foreground
+            "
+          >
+            Pasos
+          </h2>
+
           <Button
             type="button"
             variant="outline"
             size="sm"
             onClick={addStep}
-            className="rounded-full"
+            className="
+              rounded-full
+              border-border
+            "
           >
             <Plus className="mr-1.5 h-4 w-4" />
             Añadir paso
           </Button>
         </div>
 
-        {steps.map((step, i) => (
-          <div
-            key={step.id}
-            className="space-y-3 rounded-2xl border border-[#e5e5e5] bg-white p-5 shadow-sm"
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-[13px] font-medium text-[#404040]">
-                Paso {i + 1}
-              </span>
-              {steps.length > 1 && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  onClick={() => removeStep(step.id)}
-                  className="text-red-500"
+        {steps.map(
+          (step, index) => (
+            <div
+              key={step.id}
+              className="
+                space-y-4
+                rounded-3xl
+                border
+                border-border
+                bg-card
+                p-5
+              "
+            >
+              <div
+                className="
+                  flex
+                  items-center
+                  justify-between
+                "
+              >
+                <span
+                  className="
+                    text-sm
+                    font-medium
+                    text-muted-foreground
+                  "
                 >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              )}
+                  Paso{" "}
+                  {index + 1}
+                </span>
+
+                {steps.length >
+                  1 && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon-sm"
+                    onClick={() =>
+                      removeStep(
+                        step.id
+                      )
+                    }
+                    className="
+                      text-destructive
+                      hover:text-destructive
+                    "
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+
+              <Input
+                value={step.title}
+                onChange={(e) =>
+                  updateStep(
+                    step.id,
+                    {
+                      title:
+                        e.target
+                          .value,
+                    }
+                  )
+                }
+                placeholder="Título del paso"
+                required
+                className="
+                  h-11
+                  rounded-xl
+                "
+              />
+
+              <Textarea
+                value={
+                  step.description
+                }
+                onChange={(e) =>
+                  updateStep(
+                    step.id,
+                    {
+                      description:
+                        e.target
+                          .value,
+                    }
+                  )
+                }
+                placeholder="Descripción"
+                className="
+                  min-h-24
+                  resize-none
+                  rounded-xl
+                "
+              />
             </div>
-            <Input
-              value={step.title}
-              onChange={(e) => updateStep(step.id, { title: e.target.value })}
-              placeholder="Título del paso"
-              required
-              className="rounded-xl"
-            />
-            <Textarea
-              value={step.description}
-              onChange={(e) =>
-                updateStep(step.id, { description: e.target.value })
-              }
-              placeholder="Descripción"
-              className="rounded-xl resize-none"
-            />
-          </div>
-        ))}
+          )
+        )}
       </div>
 
       <Button
         type="submit"
         disabled={saving}
-        className="w-full rounded-full bg-[#0066cc] py-6 hover:bg-[#0055b3] sm:w-auto sm:px-10"
+        className="
+          h-11
+          w-full
+          rounded-full
+          sm:w-auto
+          sm:px-8
+        "
       >
-        {saving ? "Guardando..." : submitLabel}
+        {saving
+          ? "Guardando..."
+          : submitLabel}
       </Button>
     </form>
   );

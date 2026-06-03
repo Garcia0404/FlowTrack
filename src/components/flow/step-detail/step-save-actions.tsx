@@ -14,12 +14,26 @@ export function StepSaveActions({
   onDiscard,
 }: StepSaveActionsProps) {
   return (
-    <div className="flex flex-wrap items-center gap-2 border-t border-[#e5e5e5] pt-4">
+    <div
+      className="
+        flex
+        flex-wrap
+        items-center
+        gap-2
+        border-t
+        border-border
+        pt-4
+      "
+    >
       <Button
         size="sm"
         onClick={onSave}
         disabled={!hasChanges}
-        className="rounded-full bg-primary px-5 hover:bg-[#0055b3] disabled:opacity-40"
+        className="
+          rounded-full
+          px-5
+          disabled:opacity-40
+        "
       >
         Guardar
       </Button>
@@ -29,7 +43,13 @@ export function StepSaveActions({
         size="sm"
         disabled={!hasChanges}
         onClick={onDiscard}
-        className="rounded-full border-[#e5e5e5] text-[#737373] hover:text-[#404040] disabled:opacity-40"
+        className="
+          rounded-full
+          border-border
+          text-muted-foreground
+          hover:text-foreground
+          disabled:opacity-40
+        "
       >
         Descartar
       </Button>
